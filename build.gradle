@@ -75,7 +75,7 @@ gretty {
 
 gwt {
     gwtVersion = '2.8.2'
-    modules 'com.matteoveroni.gwtjokes.ModuloGwtJokes'
+    modules 'com.matteoveroni.gwtjokes.GwtJokesModule'
     minHeapSize = "256M" 
     maxHeapSize = "1024M"
     

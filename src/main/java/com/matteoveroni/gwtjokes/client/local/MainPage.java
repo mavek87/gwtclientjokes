@@ -29,7 +29,6 @@ public class MainPage {
 
 	// Example:
 	//	https://github.com/klenovic/spring-errai-jaxrs/blob/master/src/main/java/org/jboss/errai/samples/restdemo/client/local/App.java
-	
 	@Inject
 	@DataField
 	private HTMLButtonElement btn_saveNewJoke;
@@ -47,45 +46,49 @@ public class MainPage {
 	private HTMLInputElement txt_newJoke;
 
 //	private final Caller<RestJokesService> restCustomerService;
-
 //	@Inject
 //	public MainPage(Caller<RestJokesService> restCustomerService) {
 //		this.restCustomerService = restCustomerService;
 //	}
-
 	@PageShowing
 	public void onPageShowing() {
 		RestClient.setJacksonMarshallingActive(true);
 	}
 
-	@EventHandler("btn_salvaNuovoJoke")
+	@EventHandler("btn_saveNewJoke")
 	public void onBottoneSalvaNuovoJokeCliccato(@ForEvent("click") MouseEvent e) {
-		Joke newJoke = new Joke();
-		newJoke.setText(txt_newJoke.value);
+		String newJokeText = txt_newJoke.value;
+		if (newJokeText == null || newJokeText.trim().isEmpty()) {
+			window.alert("You can\'t insert an empty joke!");
+		} else {
+			Joke newJoke = new Joke();
+			newJoke.setText(newJokeText);
 
-		RestClient.create(
-			RestJokesService.class,
-			REST_SERVER,
-			(Response response) -> {
-				try {
-					int responseStatusCode = response.getStatusCode();
-					if (responseStatusCode == Response.SC_OK) {
-						Joke savedJoke = MarshallingWrapper.fromJSON(response.getText(), Joke.class);
-						if (savedJoke != null) {
-							window.alert("Joke " + savedJoke + " saved");
+			RestClient.create(
+				RestJokesService.class,
+				REST_SERVER,
+				(Response response) -> {
+					try {
+						int responseStatusCode = response.getStatusCode();
+						if (responseStatusCode == Response.SC_OK) {
+							Joke savedJoke = MarshallingWrapper.fromJSON(response.getText(), Joke.class);
+							if (savedJoke != null) {
+								txt_newJoke.value = "";
+								window.alert("Joke " + savedJoke + " saved");
+							}
+						} else {
+							window.alert("Response status code: " + responseStatusCode);
 						}
-					} else {
-						window.alert("Response status code: " + responseStatusCode);
+					} catch (Exception ex) {
+						window.alert("Unexpected error parsing the response: " + ex.getMessage());
 					}
-				} catch (Exception ex) {
-					window.alert("Unexpected error parsing the response: " + ex.getMessage());
+				},
+				(Request message, Throwable throwable) -> {
+					window.alert("Error: " + throwable.getMessage());
+					return true;
 				}
-			},
-			(Request message, Throwable throwable) -> {
-				window.alert("Error: " + throwable.getMessage());
-				return true;
-			}
-		).addJoke(newJoke);
+			).addJoke(newJoke);
+		}
 	}
 
 	@EventHandler("btn_printJokes")
