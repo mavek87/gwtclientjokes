@@ -1,0 +1,92 @@
+/*body {
+    font-family: "Open Sans", sans-serif;
+    font-size: 16px;
+}*/
+
+h1, h2, h3, h4, h5, h6, h7, h8 {
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+/*iframe {
+    display:block;
+}*/
+
+/*h2 {
+    margin-top: 50px;
+    font-weight: bold;
+}
+
+h3 {
+    margin-top: 40px;
+    font-weight: bold;
+}
+
+h4 {
+    margin-top: 30px;
+    font-weight: bold;
+}*/
+textarea {
+    vertical-align: top;
+}
+
+p {
+    margin-top: 5px;
+    margin-bottom: 15px;
+}
+
+li {
+    margin-bottom: 5px;
+}
+
+.thumbRight {
+    float: right;
+    width: 20%;
+    margin: 5px 15px;
+}
+
+.thumbRight img {
+    width: 100%;
+    border: 1px solid #e8c90c;
+    max-width: 200px;
+}
+
+a.linkSezione {
+    font-weight: bold;
+    color: #e69138 !important;
+}
+
+.logoPolisweb {
+    display: inline-block;
+    width: 20px;
+    margin-bottom: 3px;
+}
+
+.separatore {
+    clear: both;
+}
+
+.gwt-DialogBox {
+    width: 400px;
+    border: 2px solid black;
+    border-radius: 4px;
+    padding: 15px;
+    background: #EEE;
+}
+
+/** Most GWT widgets already have a style name defined */
+.gwt-DialogBox {
+    width: 400px;
+    border: 3px dashed black;
+    padding: 10px;
+    background: #EEE;
+}
+
+/** Set ids using widget.getElement().setId("idOfElement") */
+#closeButton {
+    margin: 15px 6px 6px;
+}
+
+.serverResponseLabelError {
+    color: red;
+}

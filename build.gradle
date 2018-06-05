@@ -1,0 +1,112 @@
+buildscript {
+    repositories {
+        jcenter()
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'com.netflix.nebula:gradle-extra-configurations-plugin:3.0.3'
+        classpath 'org.wisepersist:gwt-gradle-plugin:1.0.6'
+    }
+}
+
+apply plugin: 'java'
+apply plugin: 'gwt'
+apply plugin: 'war'
+apply from: 'https://raw.github.com/akhikhl/gretty/master/pluginScripts/gretty.plugin'
+apply plugin: 'nebula.provided-base'
+
+repositories {
+    jcenter()
+    mavenCentral()
+    maven {
+        url "https://repo.vertispan.com/gwt-snapshot"    
+    }
+}
+
+dependencies {
+    compile group: 'com.google.gwt', name: 'gwt-user', version: '2.8.2'
+    
+    //    compile 'org.jboss.gwt.elemento:elemento-core:0.8.2'
+    
+    compile group: 'com.google.elemental2', name: 'elemental2-core', version: '1.0.0-RC1'
+    compile group: 'com.google.elemental2', name: 'elemental2-dom', version: '1.0.0-RC1'
+    
+    //        compile group: 'org.jboss.errai', name: 'errai-javaee-all', version: '4.2.0.Final'
+
+    compile group: 'org.jboss.errai', name: 'errai-ioc', version: '4.2.0.Final'
+    compile group: 'org.jboss.errai', name: 'errai-cdi-client', version: '4.2.0.Final'
+    compile group: 'org.jboss.errai', name: 'errai-ui', version: '4.2.0.Final'
+    compile group: 'org.jboss.errai', name: 'errai-navigation', version: '4.2.0.Final'
+    compile group: 'org.jboss.errai', name: 'errai-data-binding', version: '4.2.0.Final'
+    compile group: 'org.jboss.errai', name: 'errai-jaxrs-provider', version: '4.2.0.Final'
+    compile group: 'org.jboss.errai', name: 'errai-jaxrs-client', version: '4.2.0.Final'
+    compile group: 'org.jboss.errai', name: 'errai-marshalling', version: '4.2.0.Final'
+    
+    // Validazione
+    compile group: 'org.jboss.errai', name: 'errai-validation', version: '4.2.0.Final'
+    provided group: 'javax.validation', name: 'validation-api', version: '1.0.0.GA'
+    provided 'javax.validation:validation-api:1.0.0.GA:sources'
+    provided group: 'org.hibernate', name: 'hibernate-validator', version: '4.1.0.Final'
+    provided 'org.hibernate:hibernate-validator:4.1.0.Final:sources'
+    
+    // ************* JAX-RS Resteasy *************
+    compile 'org.jboss.resteasy:resteasy-jaxrs:3.0.7.Final'
+    compile 'org.jboss.resteasy:resteasy-client:3.0.7.Final'
+
+    compile 'org.jboss.resteasy:resteasy-jackson-provider:3.0.7.Final'
+    // ***********************************
+    
+    // Necessaria senno fallisce compilazione (con errai?)
+    compile group: 'org.ow2.asm', name: 'asm', version: '5.0.3'
+    compile group: 'org.slf4j', name: 'slf4j-api', version: '1.7.25'
+    compile group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3'
+
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+}
+
+gretty {
+    contextPath = 'app'
+    // serverConfigFile = 'gretty.xml'
+    servletContainer = 'jetty9'
+    loggingLevel = "DEBUG"
+    logDir = "$buildDir/logs"
+    jvmArgs = ['-Xms1024M', '-Xmx1024M']
+}
+
+gwt {
+    gwtVersion = '2.8.2'
+    modules 'com.matteoveroni.gwtjokes.ModuloGwtJokes'
+    minHeapSize = "256M" 
+    maxHeapSize = "1024M"
+    
+    compiler {
+        logLevel = 'DEBUG'
+        // "PRETTY", "DETAILED", "OBFUSCATED" (default -> PRETTY -> veloce esecuzione)
+        style = "PRETTY"
+        // Only succeed if no input files have errors
+        // strict = true;
+        // The number of local workers to use when compiling permutations
+        localWorkers = 2
+        // Compile quickly with minimal optimizations
+        //        draftCompile = true
+        // Sets the optimization level used by the compiler. 0=none 9=maximum 
+        optimize = 0
+        // Compiles faster by reusing data from the previous compile
+        incremental = true
+        // Include metadata for some java.lang.Class methods (default on)
+        // disableClassMetadata = true
+        // DEPRECATED: use jre.checks.checkLevel instead. (defaults to OFF)
+        //        disableCastChecking = true
+    }
+    
+    //    jsInteropExports {
+    //        shouldGenerate = true
+    //        includePatterns = ['it.giuffre.antiriciclaggio.client.local.*']
+    //        //        excludePatterns = ['your package']
+    //    }
+    
+    superDev {
+        noPrecompile = true
+        launcherDir = file("$buildDir/gwt/out/app")
+    }
+}
